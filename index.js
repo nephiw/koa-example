@@ -4,6 +4,7 @@ const BodyParser = require('koa-bodyparser');
 const ObjectID = require('mongodb').ObjectID;
 
 const logger = require('koa-logger');
+const send = require('koa-send');
 const jwt = require('./jwt');
 
 const app = new Koa();
@@ -31,6 +32,10 @@ router.post('/auth', async (ctx) => {
     ctx.status = 401;
     ctx.body = { 'error': 'Invalid login' }
   }
+});
+
+router.get('/', async (ctx) => {
+  await send(ctx, './notes.txt');
 });
 
 securedRouter.get('/people', async (ctx) => {
