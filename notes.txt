@@ -1,0 +1,34 @@
+This is the work from following along with http://polyglot.ninja/koajs-mongodb-rest-api/ and the next two tutorials.
+
+I also followed http://www.ifdattic.com/how-to-mongodb-nodejs-docker/ to set up the docker containers and get mongo up and running without having to install anything.  There are a few important commands to know:
+
+To start docker the docker for the node app, use this command (the d flag runs it detached):
+docker-compose up -d
+
+This uses the docker compose file to start both containers, the app container and the database container. `docker-compose.yml` contains all of the details here including the name of the database.
+
+Use these commands to stop and remove all docker containers, this is useful if another project is already using your port.
+
+docker stop $(docker ps -a -q)
+docker rm $(docker ps -a -q)
+
+Note that `docker ps -a -q` lists all running processes, but only their id's
+
+The way this is configured, the files are on the local filesystem, so you can edit them here, but to insteall modules, you have to be running within the docker instance. This can be done using:
+docker-compose exec app bash
+
+Once running bash inside of the docker insteance, it run this to run the app using nodemon (so the server will reload when changes happen). cd into the `src` directory and execute `nodemon` (this is the same as `node` or `node index.js`)
+
+I also wanted to test mongo directly, so I was able to do this with
+docker exec -it b595b470cbf5 bash
+
+Where b595... is the id of the mongo container. I got that by using `docker ps` directly to get access to the id. There must be a better way though.
+
+Note that this app has a little authentication work in it, so in order to actually get information, it is easiest to use Postman, and POST to http://localhost:3000/auth 
+{
+	"username": "user",
+	"password": "pwd"
+}
+
+Which will return an authorization token, which can then be used to access the "secure" routes.
+
